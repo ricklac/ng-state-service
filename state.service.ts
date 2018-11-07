@@ -277,7 +277,7 @@ export class StateService {
               }
             });
             // this.hasAppChanges = !deepEqual(appParams, queryParams);
-            if (this.changes.app.adds || this.changes.app.deletes.length > 0) {
+            if (Object.getOwnPropertyNames(this.changes.app.adds).length > 0 || this.changes.app.deletes.length > 0) {
               console.log('app param changes detected, state modified');
               console.log('state app params after merge', this.activeState.snapshot.appParams);
             }
@@ -302,14 +302,14 @@ export class StateService {
               }
             });
             // this.hasComponentChanges = !deepEqual(componentParams, routeParams);
-            if (this.changes.component.adds || this.changes.component.deletes.length > 0) {
+            if (Object.getOwnPropertyNames(this.changes.component.adds).length > 0 || this.changes.component.deletes.length > 0) {
               console.log('component param changes detected, state modified');
               console.log('state component params after merge', this.activeState.snapshot.componentParams);
             }
             // If there are changes from previous url 'fixing' navigation
             // or from alterState() or path change, drop through (subscribe will be called in NavigationEnd).
-            if (this.changes.app.adds || this.changes.app.deletes.length > 0 ||
-              this.changes.component.adds || this.changes.component.deletes.length > 0) {
+            if (Object.getOwnPropertyNames(this.changes.app.adds).length > 0 || this.changes.app.deletes.length > 0 ||
+              Object.getOwnPropertyNames(this.changes.component.adds).length > 0 || this.changes.component.deletes.length > 0) {
               // update universal params with any changes
               this.activeState.snapshot.params = { ...this.activeState.snapshot.appParams, ...this.activeState.snapshot.componentParams };
               console.log('hasXxxChanges so state should be broadcast.');
@@ -375,8 +375,8 @@ export class StateService {
           });
           return false;
         }
-        return !!this.changes.app.adds || this.changes.app.deletes.length > 0 ||
-          !!this.changes.component.adds || this.changes.component.deletes.length > 0;
+        return Object.getOwnPropertyNames(this.changes.app.adds).length > 0 || this.changes.app.deletes.length > 0 ||
+          Object.getOwnPropertyNames(this.changes.component.adds).length > 0 || this.changes.component.deletes.length > 0;
       })
     ).subscribe(_ => {
       // this code should only be reached if in fact there are changes to broadcast
